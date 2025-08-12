@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/img/picyangu.jpg">
+  <title>Muzamil AI Portfolio</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0d0d0d;
+      color: #00ff9d;
+      font-family: 'Courier New', Courier, monospace;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .container {
+      display: flex;
+      width: 100%;
+      height: 100vh;
+    }
+
+    .left {
+      width: 60%;
+      background: #000;
+      padding: 2rem;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .right {
+      width: 40%;
+      background: #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .right img {
+      max-width: 80%;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #00ff9d;
+    }
+
+    .terminal {
+      flex-grow: 1;
+      overflow-y: auto;
+    }
+
+    .input-line {
+      display: flex;
+    }
+
+    .input-line span {
+      margin-right: 0.5rem;
+    }
+
+    input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #00ff9d;
+      font-family: inherit;
+      font-size: 1rem;
+      width: 100%;
+    }
+
+    .response {
+      margin: 0.5rem 0;
+      color: #00ff9d;
+    }
+  </style>
+</head>
+<!-- CHANGES ONLY IN THE BODY & JS SECTIONS -->
+<!-- HEAD STAYS SAME -->
+
+<body>
+  <div class="container">
+    <div class="left">
+      <div class="terminal" id="terminal">
+        <div class="response">Welcome to Muzamil’s AI Powered Portfolio 👨🏽‍💻</div>
+        <div class="response">Type <code>'help'</code> to get started.</div>
+
+        <!-- 🟢 MOVED INPUT INSIDE TERMINAL HERE -->
+        <div class="input-line" id="inputLine">
+          <span>&gt;</span>
+          <input type="text" id="commandInput" autocomplete="on">
+        </div>
+      </div>
+    </div>
+
+    <div class="right">
+      <img src="/img/picyangu.jpg" alt="Muzamil Photo">
+    </div>
+  </div>
+
+  <script>
+    const terminal = document.getElementById('terminal');
+    const input = document.getElementById('commandInput');
+    const inputLine = document.getElementById('inputLine');
+
+    const commands = {
+      help: 'Commands: about, education, services, skils, contact, clear, Homepage',
+      about: "Hi, I'm Muzamil – a passionate web dev & designer from Mandera Softwares 💻",
+      education:" I hold a degree in Computer Science from the Egerton University 🎓",
+      services: "Web Design | Graphic Design | Printing Works | POS Systems | Digital Marketing",
+      skills: "HTML | CSS | JavaScript | React | Node.js | Python",
+      contact: "Email: muzamilinc@gmail.com",
+      clear: 'clear',
+      homepage: 'https://muzamilafey.netlify.app/'
+
+    };
+
+    const corrections = {
+      clea: 'clear',
+      cler: 'clear',
+      abot: 'about',
+      abut: 'about',
+      educaton: 'education',
+      servics: 'services',
+      conact: 'contact'
+    };
+
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        let cmd = input.value.trim().toLowerCase();
+
+        const entered = document.createElement('div');
+        entered.className = 'response';
+        entered.textContent = '> ' + cmd;
+
+        // 🟢 Insert before inputLine so input stays last
+        terminal.insertBefore(entered, inputLine);
+
+        const output = document.createElement('div');
+        output.className = 'response';
+
+        if (corrections[cmd]) {
+          const corrected = corrections[cmd];
+          const notice = document.createElement('div');
+          notice.className = 'response';
+          notice.textContent = `Did you mean "${corrected}"? Executing that instead.`;
+          terminal.insertBefore(notice, inputLine);
+          cmd = corrected;
+        }
+
+        if (commands[cmd]) {
+          if (cmd === 'clear') {
+            terminal.innerHTML = '';
+
+            const welcome = document.createElement('div');
+            welcome.className = 'response';
+            welcome.textContent = 'Welcome to Muzamil’s Terminal Portfolio 👨🏽‍💻';
+            terminal.appendChild(welcome);
+
+            const helpMsg = document.createElement('div');
+            helpMsg.className = 'response';
+            helpMsg.textContent = 'Type help to get started.';
+            terminal.appendChild(helpMsg);
+
+            // 🟢 Add inputLine back after clear
+            terminal.appendChild(inputLine);
+          } else {
+            output.textContent = commands[cmd];
+            terminal.insertBefore(output, inputLine);
+          }
+        }else if (cmd === 'homepage') {
+            output.textContent = commands[cmd];
+            terminal.appendChild(output);
+            setTimeout(() => {
+              window.location.href = 'index.html';
+            }, 1000);
+        } else {
+          output.textContent = 'Command not found. Type "help"';
+          terminal.insertBefore(output, inputLine);
+        }
+
+        input.value = '';
+
+        // 🟢 Scroll to make input visible at the bottom
+        terminal.scrollTop = terminal.scrollHeight;
+      }
+    });
+    
+  </script>
+  
+</body>
+</html>
